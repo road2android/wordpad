@@ -3,12 +3,11 @@ package com.hafijulislam.wordpad.adapter
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Button
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.hafijulislam.wordpad.DetailActivity
 import com.hafijulislam.wordpad.R
@@ -35,7 +34,13 @@ class WordAdapter(private val letterId: String, context: Context) :
     override fun getItemCount(): Int = filteredWords.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordViewHolder {
-        TODO("Not yet implemented")
+       val layout = LayoutInflater
+           .from(parent.context)
+           .inflate(R.layout.item_view, parent, false)
+
+        layout.accessibilityDelegate = Accessibility
+
+        return WordViewHolder(layout)
     }
 
     override fun onBindViewHolder(holder: WordViewHolder, position: Int) {
@@ -58,10 +63,6 @@ class WordAdapter(private val letterId: String, context: Context) :
             info: AccessibilityNodeInfo
         ) {
             super.onInitializeAccessibilityNodeInfo(host, info)
-            // With `null` as the second argument to [AccessibilityAction], the
-            // accessibility service announces "double tap to activate".
-            // If a custom string is provided,
-            // it announces "double tap to <custom string>".
             val customString = host.context?.getString(R.string.look_up_word)
             val customClick =
                 AccessibilityNodeInfo.AccessibilityAction(

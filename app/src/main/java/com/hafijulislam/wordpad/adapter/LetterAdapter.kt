@@ -1,11 +1,13 @@
 package com.hafijulislam.wordpad.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
+import com.hafijulislam.wordpad.DetailActivity
 import com.hafijulislam.wordpad.R
 
 /**
@@ -44,7 +46,15 @@ class LetterAdapter :
      */
     override fun onBindViewHolder(holder: LetterViewHolder, position: Int) {
         val item = list.get(position)
+
         holder.button.text = item.toString()
+
+        holder.button.setOnClickListener {
+            val context = holder.itemView.context
+            val intent = Intent(context, DetailActivity::class.java)
+            intent.putExtra(DetailActivity.LETTER, holder.button.text.toString())
+            context.startActivity(intent)
+        }
     }
 
     // Setup custom accessibility delegate to set the text read with

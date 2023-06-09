@@ -1,6 +1,8 @@
 package com.hafijulislam.wordpad.adapter
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +10,7 @@ import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Button
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.hafijulislam.wordpad.DetailActivity
 import com.hafijulislam.wordpad.R
 
 class WordAdapter(private val letterId: String, context: Context) :
@@ -39,6 +42,11 @@ class WordAdapter(private val letterId: String, context: Context) :
         val item = filteredWords[position]
         val context = holder.view.context
         holder.button.setText(item)
+        holder.button.setOnClickListener {
+            val queryUrl: Uri = Uri.parse("${DetailActivity.SEARCH_PREFIX}${item}")
+            val intent = Intent(Intent.ACTION_VIEW, queryUrl)
+            context.startActivity(intent)
+        }
 
     }
 

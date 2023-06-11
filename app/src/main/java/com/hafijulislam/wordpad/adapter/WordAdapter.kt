@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Button
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.hafijulislam.wordpad.DetailActivity
 import com.hafijulislam.wordpad.R
@@ -23,7 +24,6 @@ class WordAdapter(private val letterId: String, context: Context) :
         filteredWords = words
             .filter { it.startsWith(letterId, ignoreCase = true) }
             .shuffled()
-            .take(5)
             .sorted()
     }
 
@@ -34,9 +34,9 @@ class WordAdapter(private val letterId: String, context: Context) :
     override fun getItemCount(): Int = filteredWords.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordViewHolder {
-       val layout = LayoutInflater
-           .from(parent.context)
-           .inflate(R.layout.item_view, parent, false)
+        val layout = LayoutInflater
+            .from(parent.context)
+            .inflate(R.layout.item_view, parent, false)
 
         layout.accessibilityDelegate = Accessibility
 
@@ -46,7 +46,8 @@ class WordAdapter(private val letterId: String, context: Context) :
     override fun onBindViewHolder(holder: WordViewHolder, position: Int) {
         val item = filteredWords[position]
         val context = holder.view.context
-        holder.button.setText(item)
+        holder.button.text = item
+        holder.button.setBackgroundColor(ContextCompat.getColor(context, R.color.blue_700))
         holder.button.setOnClickListener {
             val queryUrl: Uri = Uri.parse("${DetailActivity.SEARCH_PREFIX}${item}")
             val intent = Intent(Intent.ACTION_VIEW, queryUrl)

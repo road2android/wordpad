@@ -1,8 +1,12 @@
 package com.hafijulislam.wordpad
 
+import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.OrientationEventListener
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
@@ -18,15 +22,21 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
 
+    private lateinit var orientationEventListener: OrientationEventListener
+
     private var isLinearLayoutManager = true
     private fun chooseLayout() {
         if (isLinearLayoutManager) {
             recyclerView.layoutManager = LinearLayoutManager(this)
         } else {
-            recyclerView.layoutManager = GridLayoutManager(this, 4)
+            val spanCount =
+                if (getResources().configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 4 else 8
+
+            recyclerView.layoutManager = GridLayoutManager(this, spanCount)
         }
         recyclerView.adapter = LetterAdapter()
     }
+
     private fun setIcon(menuItem: MenuItem?) {
         if (menuItem == null)
             return
@@ -43,12 +53,13 @@ class MainActivity : AppCompatActivity() {
                 ContextCompat.getDrawable(this, R.drawable.ic_grid_layout)
             else ContextCompat.getDrawable(this, R.drawable.ic_linear_layout)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        Log.i("Resources", getResources().configuration.orientation.toString())
 //        // Get the navigation host fragment from this Activity
 //        val navHostFragment = supportFragmentManager
 //            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -60,6 +71,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView = binding.recyclerView
         chooseLayout()
     }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.layout_menu, menu)
 
@@ -69,6 +81,7 @@ class MainActivity : AppCompatActivity() {
 
         return true
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_switch_layout -> {
@@ -89,6 +102,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Toast.makeText(this, "Landscape Mode", Toast.LENGTH_SHORT).show()
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            Toast.makeText(this, "Portrait Mode", Toast.LENGTH_SHORT).show()
+        }
+    }
     /**
      * Enables back button support. Simply navigates one element up on the stack.
      */
